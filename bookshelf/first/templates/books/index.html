@@ -1,0 +1,81 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
+    Main Page
+{% endblock %}
+{% block styleblock %}
+    <link rel="stylesheet" href="{% static 'css/books/index.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.js"
+        integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>
+{% endblock %}
+
+
+{% block main %}
+    <div class="toggled">
+        <div class="sidebar-wrapper">
+            <div class="accordion" id="accordion">
+                <h3 class="name-of-catagory" id="fucc">Категории:</h3>
+                {% for i in category %}
+                <ul class="accordion-menu">
+                    <li>
+                        <div class="dropdownlink">{{ i.title }}<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+                        <ul class="submenuItems">
+                            {% for j in subcategory %}
+                            {% if j.category == i  %}
+                            <li><a href="{{ j.get_absolute_url}}">{{ j.title}}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="slider">
+                    <div class="title_site">BookShelf - оставь отзыв о своей любимой книге</div>
+                    <div class="slider__items">
+                        {% for foo in books %}
+                        <div class="slider__item slider__item_{{ forloop.counter }}">
+                            <div class="arrow1" onclick="minusSlide()"><i class="fas fa-arrow-left"></i></div>
+                            <div class="arrow2" onclick="plusSlide()"><i class="fas fa-arrow-right"></i></div>
+                            <span class="slider__item_inner">
+                                <span class="slider__item_img">
+                                    <img class="slider__item_photo" src="{{ foo.image.url }}" alt="">
+                                </span>
+                                <span class="slider__item_testimonial">
+                                    <span class="slider__item_name">{{ foo.title }}</span>
+                                    <span class="slider__item_post">{{ foo.author }}</span>
+                                    <span class="slider__item_text">
+                                        {{ foo.description|truncatechars_html:235|safe }}
+                                    </span>
+                                    <span class="slider__item_action">
+                                        <a class="btn" href="{{ foo.get_absolute_url }}">Подробнее</a>
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="slider-lines">
+                        <span class="slider-lines_item"></span>
+                        <span class="slider-lines_item"></span>
+                        <span class="slider-lines_item"></span>
+                    </div>
+                    <a class="slider__control slider__control_prev" href="#" role="button"></a>
+                    <a class="slider__control slider__control_next" href="#" role="button"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scriptjs %}
+    <script src="{% static 'js/index.js' %}"></script>
+    <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+{% endblock %}

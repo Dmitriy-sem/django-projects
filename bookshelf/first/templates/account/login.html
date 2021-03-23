@@ -1,0 +1,72 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block styleblock %}
+    <link rel="stylesheet" href="{% static 'css/account/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/account/login_paddings.css' %}">
+{% endblock %}
+
+{% block title %}
+    Войти
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <div class="limiter">
+            <div class="container-login100">
+                <div class="wrap-login100">
+                    <div class="login100-form-title">
+                        <span class="login100-form-title-1">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    {{ message }}
+                                {% endfor %}
+                            {% else %}
+                                Вход в аккаунт
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <form class="login100-form validate-form" method="post">
+                        {% csrf_token %}
+                        <div class="wrap-input100 validate-input m-b-26">
+                            <span class="label-input100">Имя</span>
+                                {{ form.username }}
+                                <span class="errors">
+                                    {{ form.username.errors }}
+                                </span>
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="wrap-input100 validate-input m-b-18">
+                            <span class="label-input100">Пароль</span>
+                                {{ form.password }}
+                                 <a href="#" class="password-control" onclick="return show_hide_password(this);"></a>
+                                <span class="errors">
+                                    {{ form.password.errors }}
+                                </span>
+                            <span class="focus-input100"></span>
+                        </div>
+
+                        <div class="regestr">
+                           Ещё не зарегистрированы?<a href="{% url 'register' %}" class="ml-2">Зарегистрироваться</a>
+                           <a href="{% url 'password_reset' %}">Забыли пароль?</a>
+                        </div>
+
+                        <div class="container-login100-form-btn">
+                            <button class="login100-form-btn" type="submit">
+                                Войти
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+
+{% endblock %}
+
+{% block scriptjs %}
+    <script src="{% static 'js/show_password.js' %}"></script>
+{% endblock %}
+

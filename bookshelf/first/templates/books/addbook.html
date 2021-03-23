@@ -1,0 +1,51 @@
+{% extends '../base.html'%}
+{% load static %}
+
+{% block styleblock %}
+    <link rel="stylesheet" href="{% static 'css/books/addbook.css' %}">
+{% endblock %}
+
+{% block title %}
+    Add Book
+{% endblock %}
+
+{% block main %}
+    <h1 class="subtitle">Добавление новой книги</h1>
+    {% if request.user.is_authenticated %}
+            <div class="container-wrap">
+                <div class="wrap-inside">
+                    <form action="{% url 'add-book' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="flex-inside">
+                            <div class="flex-inside-item image">
+                                <img src="{% static 'images/book_template.jpg' %}" class="image-book" alt="">
+                                <p class="add_image">Добавить картинку</p>
+                                {{ form.image }}
+                            </div>
+                        <div class="flex-inside-item title-author">
+                            {{ form.title }}
+                            <div class="flex-author">
+                                {{ form.author }}
+                            </div>
+                            {{ form.subcategory }}
+                        </div>
+                    </div>
+                        <div class="text">
+                            {{ form.description }}
+                        </div>
+                        <button class="btn btn-primary mybtn">Добавить</button>
+                    </form>
+                </div>
+            </div>
+    {% else %}
+        <div style="text-align:center; margin-top: 70px;">
+            <h2>Для того чтобы добавить книгу нужно <br>сначала авторизоваться</h2>
+            <a href="{% url 'login' %}" style="font-size: 22px">Войти</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block scriptjs %}
+    <script src="{% static 'js/addbook.js' %}"></script>
+{% endblock %}
+

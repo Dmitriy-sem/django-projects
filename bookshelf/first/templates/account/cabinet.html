@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load dot %}
+{% load static %}
+
+
+{% block title %}
+Личный кабинет
+{% endblock %}
+
+{% block styleblock %}
+<link rel="stylesheet" href="{% static 'css/account/cabinet.css' %}">
+{% endblock %}
+
+{% block main %}
+<div class="startphoto"></div>
+
+<div class="main_block">
+    <div class="item left-section">
+        <div class="info">
+            <div class="avatar">
+                <div class="plus">
+                    <i class="fas fa-plus"></i>
+                </div>
+                {% if img %}
+                <img src="{{ img }}" alt="" width="200px" height="200px">
+                {% else %}
+                <img src="{% static 'images/user.png' %}" alt="" width="200px" height="200px">
+                {% endif %}
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" name="btnform1" id="file" />
+                </form>
+            </div>
+            <div class="comments">
+                {% if comments %}
+                <h4>Ваши последние отзывы:</h4>
+                <div class="comment-widgets m-b-20">
+                    {% for comment in comments %}
+                    <a href="{{ comment.book.get_absolute_url }}#comment{{ comment.id }}" class="blocklink">
+                        <div class="d-flex flex-row comment-row">
+                            <div class="p-2">
+                                <span class="round">
+                                    <img src="{{ comment.book.image.url }}" alt="" width="100px" height="150px">
+                                </span>
+                            </div>
+                            <div class="comment-text w-100">
+                                <form action="#" class="form form__margin">
+                                    <div class="form__item">
+                                        <div class="rating">
+                                            <div class="rating__body">
+                                                <div class="rating__active"></div>
+                                                <div class="rating__items">
+                                                    <input type="radio" class="rating__item" name="rating" value="1">
+                                                    <input type="radio" class="rating__item" name="rating" value="2">
+                                                    <input type="radio" class="rating__item" name="rating" value="3">
+                                                    <input type="radio" class="rating__item" name="rating" value="4">
+                                                    <input type="radio" class="rating__item" name="rating" value="5">
+                                                </div>
+                                            </div>
+                                            <div class="rating__value">{{ comment.rating|replace }}</div>
+                                        </div>
+                                    </div>
+                                </form>
+                                {{ comment.content|truncatechars_html:100|safe }}
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                    {% else %}
+                    <h5>Вы ещё не оставляли отзывы</h5>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="item right-section">
+    <div class="username">
+        <p class="name">{{ user.username }}</p>
+        <p class="datejoin">На сайте с {{ date_join }}</p>
+    </div>
+    <div class="functional">
+        <div class="func_item tab">
+            <div class="tab_parent">
+                <button class="tablinks tab_info" id="defaultOpen""><i class=" far fa-file-alt"></i><br>Информация об
+                    аккаунте</button>
+                <button class="tablinks  tab_comments"><i class="fas fa-comments"></i><br>Книги</button>
+            </div>
+            <div class="tab_content_wrapper">
+                <div class="tabcontent">
+                    <h3>Информация об аккаунте</h3>
+                    <p>Имя: {{ user.first_name }}</p>
+                    <p>Фамилия: {{ user.last_name }}</p>
+                    <p>Email: {{ user.email }}</p>
+                    <a href="#" id="change_link">Изменить данные</a>
+                    <form action="" id="form_info" method="post">
+                        {% csrf_token %}
+                        {{ form2.as_p }}
+                        <button type="submit" class="btn btn-outline-success" name="btnform2">Сохранить</button>
+                    </form>
+                    <div class="change">
+                        <a href="{% url 'password_change' %}">Сменить пароль</a>
+                    </div>
+                </div>
+                <div id="Comments" class="tabcontent">
+                    <h3>Книги к которым Вы оставили отзыв</h3>
+                    <div class="books">
+                        {% for book in books %}
+                        <div class="books_item">
+                            <div class="card">
+                                {% if i.image %}
+                                <img class="card-img-top" src="{{ book.image.url }}" alt="Card image cap"
+                                    height="250px">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title"><a
+                                            href="{{ book.get_absolute_url }}">{{ book.title|truncatechars_html:45 }}</a>
+                                    </h5>
+                                    <p class="card-author">{{ book.author }}</p>
+                                    <p class="card-text">{{ book.description|truncatechars_html:155|safe }}</p>
+                                    <a href="{{ book.get_absolute_url }}" class="btn btn-outline-dark">Подробнее</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="func_item new_books">
+            <div class="new_books_wrapper">
+                <h3>Новинки</h3>
+                {% for new_book in new_books %}
+                <div class="new_book">
+                    <div class="new_book_img">
+                        <a href="{{ new_book.get_absolute_url }}"><img src="{{ new_book.image.url }}" width="100px"
+                                height="150px" alt=""></a>
+                    </div>
+                    <div class="new_book_info">
+                        <a href="{{ new_book.get_absolute_url }}" class="new_book_title">{{ new_book.title }}</a>
+                        <p class="new_book_author">{{ new_book.author }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
+
+{% block scriptjs %}
+<script src="{% static 'js/cabinet.js' %}"></script>
+<script src="{% static 'js/rating.js' %}"></script>
+{% endblock %}

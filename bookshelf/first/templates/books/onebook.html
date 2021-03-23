@@ -1,0 +1,122 @@
+{% extends '../base.html' %}
+{% load static %}
+{% load dot %}
+
+{% block title %}
+    {{ book.title }}
+{% endblock %}
+{% block styleblock %}
+    <link rel="stylesheet" href="{% static 'css/books/onebook.css' %}">
+{% endblock %}
+
+{% block main %}
+    <div class="container-not">
+        <div class="container-wrap">
+            <div class="wrap-inside">
+                <div class="flex-inside">
+                    <div class="flex-inside-item">
+                        {% if book.image %}
+                            <img src="{{ book.image.url }}" class="image-book" alt="">
+                        {% endif %}
+
+                    </div>
+                    <div class="flex-inside-item title-author">
+                        <h3>{{ book.title }}</h3>
+                        <div class="flex-author">
+                            {{ book.author }}
+                        </div>
+                         <form action="#" class="form form__margin">
+                            <div class="form__item">
+                                <div class="rating">
+                                    <div class="rating__body">
+                                        <div class="rating__active"></div>
+                                        <div class="rating__items">
+                                            <input type="radio" class="rating__item" name="rating" value="1">
+                                            <input type="radio" class="rating__item" name="rating" value="2">
+                                            <input type="radio" class="rating__item" name="rating" value="3">
+                                            <input type="radio" class="rating__item" name="rating" value="4">
+                                            <input type="radio" class="rating__item" name="rating" value="5">
+                                        </div>
+                                    </div>
+                                    <div class="rating__value">{{ rating|replace }}</div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-description">
+                <h5>О чем книга?</h5>
+                <p>{{ book.description|safe }}</p>
+            </div>
+        </div>
+        <div class="feedback">
+            <div class="mt-40 mb-100">
+                <div class="container-wrap">
+                    <div class="row">
+                        <div class="card" style="border: none; width: 910px;">
+                            <div class="card-body">
+                                <h4 class="card-title">Отзывы к книге {{ book.title }}</h4>
+                            </div>
+                            <div class="comment-widgets m-b-20">
+                            <div class="form">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    {% if request.user.is_authenticated %}
+                                        <button type="submit" class="btn btn-primary">Добавить</button>
+                                    {% else %}
+                                        <button class="btn btn-secondary" disabled title="Войдите сначала в аккаунт">Добавить</button>
+                                    {% endif %} 
+
+                                </form>
+                            </div>
+                                {% for comment in comments %}
+                                        <div class="d-flex flex-row comment-row" id="comment{{ comment.id }}">
+                                            <div class="p-2">
+                                                <span class="round">
+                                                    {% if comment.user.avatar.avatar.url %}
+                                                        <img src="{{ comment.user.avatar.avatar.url }}" alt="" width="80px" height="80px">
+                                                    {% else %}
+                                                        <img src="{% static 'images/user.png' %}" alt="" width="80px" height="80px">
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                            <div class="comment-text w-100">
+                                                <h5>{{ comment.user }}</h5>
+                                                <div class="comment-footer"> <span class="date">{{ comment.published }}</span></div>
+                                                <form action="#" class="form form__margin">
+                                                    <div class="form__item">
+                                                        <div class="rating">
+                                                            <div class="rating__body">
+                                                                <div class="rating__active"></div>
+                                                                <div class="rating__items">
+                                                                    <input type="radio" class="rating__item" name="rating" value="1">
+                                                                    <input type="radio" class="rating__item" name="rating" value="2">
+                                                                    <input type="radio" class="rating__item" name="rating" value="3">
+                                                                    <input type="radio" class="rating__item" name="rating" value="4">
+                                                                    <input type="radio" class="rating__item" name="rating" value="5">
+                                                                </div>
+                                                            </div>
+                                                            <div class="rating__value">{{ comment.rating|replace }}</div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                                <p class="m-b-5 m-t-10">{{ comment.content|safe }}</p>
+                                            </div>
+                                        </div>
+                                {% empty %}
+                                    <h5 style="padding: 1.25rem; color: #4f4f4f">Ещё нет отзывов об этой книге</h5>
+                            {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scriptjs %}
+    <script src="{% static 'js/rating.js' %}"></script>
+{% endblock %}
