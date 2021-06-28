@@ -1,1 +1,0 @@
-This project is built by django rest framework and react
